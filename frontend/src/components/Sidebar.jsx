@@ -9,10 +9,14 @@ const Sidebar = () => {
     { path: '/users', name: 'Users', icon: '👥' },
     { path: '/roles', name: 'Roles', icon: '🔐' },
     { path: '/permissions', name: 'Permissions', icon: '🛡️' },
+    { path: '/analytics', name: 'Analytics', icon: '📈' },
+    { path: '/reports', name: 'Reports', icon: '📋' },
+    { path: '/audit-logs', name: 'Audit Logs', icon: '📝' },
+    { path: '/settings', name: 'Settings', icon: '⚙️' },
   ]
 
   return (
-    <aside className="w-64 bg-gray-800 text-white min-h-screen">
+    <aside className="w-64 bg-gray-800 text-white min-h-screen fixed top-0 left-0 overflow-y-auto">
       <div className="p-6">
         <h1 className="text-2xl font-bold mb-8">RBAC System</h1>
         <nav>

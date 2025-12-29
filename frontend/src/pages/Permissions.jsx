@@ -81,6 +81,21 @@ const Permissions = () => {
 
   const categories = ['Content Management', 'User Management', 'Analytics', 'System']
 
+  const addAuditLog = (action, resource, details, severity = 'Info') => {
+    const logs = JSON.parse(localStorage.getItem('rbac-audit-logs') || '[]')
+    const newLog = {
+      id: logs.length > 0 ? Math.max(...logs.map(l => l.id)) + 1 : 1,
+      timestamp: new Date().toLocaleString('en-US', { hour12: false }),
+      user: 'admin@example.com',
+      action,
+      resource,
+      details,
+      severity
+    }
+    logs.unshift(newLog)
+    localStorage.setItem('rbac-audit-logs', JSON.stringify(logs))
+  }
+
   const handleSubmitPermission = (e) => {
     e.preventDefault()
     if (editingPermission) {
@@ -88,6 +103,7 @@ const Permissions = () => {
       setPermissions(permissions.map(permission => 
         permission.id === editingPermission.id ? { ...permission, ...formData } : permission
       ))
+      addAuditLog('Update', 'Permission', `Modified permission: ${formData.name}`, 'Warning')
     } else {
       // Add new permission
       const newPermission = {
@@ -95,6 +111,7 @@ const Permissions = () => {
         ...formData
       }
       setPermissions([...permissions, newPermission])
+      addAuditLog('Create', 'Permission', `Created new permission: ${formData.name}`, 'Info')
     }
     setFormData({ name: '', description: '', category: 'Content Management', status: 'Active' })
     setEditingPermission(null)
@@ -119,7 +136,11 @@ const Permissions = () => {
   }
 
   const handleDeletePermission = (id) => {
+    const permission = permissions.find(p => p.id === id)
     setPermissions(permissions.filter(permission => permission.id !== id))
+    if (permission) {
+      addAuditLog('Delete', 'Permission', `Removed permission: ${permission.name}`, 'Critical')
+    }
   }
 
   const toggleStatus = (id) => {

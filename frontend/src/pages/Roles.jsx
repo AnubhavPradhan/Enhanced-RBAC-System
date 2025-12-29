@@ -66,6 +66,21 @@ const Roles = () => {
     }
   }
 
+  const addAuditLog = (action, resource, details, severity = 'Info') => {
+    const logs = JSON.parse(localStorage.getItem('rbac-audit-logs') || '[]')
+    const newLog = {
+      id: logs.length > 0 ? Math.max(...logs.map(l => l.id)) + 1 : 1,
+      timestamp: new Date().toLocaleString('en-US', { hour12: false }),
+      user: 'admin@example.com',
+      action,
+      resource,
+      details,
+      severity
+    }
+    logs.unshift(newLog)
+    localStorage.setItem('rbac-audit-logs', JSON.stringify(logs))
+  }
+
   const handleSubmitRole = (e) => {
     e.preventDefault()
     if (editingRole) {
@@ -73,6 +88,7 @@ const Roles = () => {
       setRoles(roles.map(role => 
         role.id === editingRole.id ? { ...role, ...formData } : role
       ))
+      addAuditLog('Update', 'Role', `Modified role: ${formData.name}`, 'Warning')
     } else {
       // Add new role
       const newRole = {
@@ -81,6 +97,7 @@ const Roles = () => {
         users: 0
       }
       setRoles([...roles, newRole])
+      addAuditLog('Create', 'Role', `Created new role: ${formData.name}`, 'Info')
     }
     setFormData({ name: '', description: '', permissions: [] })
     setEditingRole(null)
@@ -104,7 +121,11 @@ const Roles = () => {
   }
 
   const handleDeleteRole = (id) => {
+    const role = roles.find(r => r.id === id)
     setRoles(roles.filter(role => role.id !== id))
+    if (role) {
+      addAuditLog('Delete', 'Role', `Deleted role: ${role.name}`, 'Warning')
+    }
   }
 
   return (

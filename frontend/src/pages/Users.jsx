@@ -27,6 +27,21 @@ const Users = () => {
     status: 'Active'
   })
 
+  const addAuditLog = (action, resource, details, severity = 'Info') => {
+    const logs = JSON.parse(localStorage.getItem('rbac-audit-logs') || '[]')
+    const newLog = {
+      id: logs.length > 0 ? Math.max(...logs.map(l => l.id)) + 1 : 1,
+      timestamp: new Date().toLocaleString('en-US', { hour12: false }),
+      user: 'admin@example.com',
+      action,
+      resource,
+      details,
+      severity
+    }
+    logs.unshift(newLog)
+    localStorage.setItem('rbac-audit-logs', JSON.stringify(logs))
+  }
+
   const handleSubmitUser = (e) => {
     e.preventDefault()
     if (editingUser) {
@@ -34,6 +49,7 @@ const Users = () => {
       setUsers(users.map(user => 
         user.id === editingUser.id ? { ...user, ...formData } : user
       ))
+      addAuditLog('Update', 'User', `Updated user: ${formData.email}`, 'Info')
     } else {
       // Add new user
       const newUser = {
@@ -41,6 +57,7 @@ const Users = () => {
         ...formData
       }
       setUsers([...users, newUser])
+      addAuditLog('Create', 'User', `Created new user: ${formData.email}`, 'Info')
     }
     setFormData({ name: '', email: '', role: 'Viewer', status: 'Active' })
     setEditingUser(null)
@@ -65,7 +82,11 @@ const Users = () => {
   }
 
   const handleDeleteUser = (id) => {
+    const user = users.find(u => u.id === id)
     setUsers(users.filter(user => user.id !== id))
+    if (user) {
+      addAuditLog('Delete', 'User', `Deleted user: ${user.email}`, 'Warning')
+    }
   }
 
   return (
