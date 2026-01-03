@@ -1,6 +1,6 @@
 # RBAC System
 
-A modern Role-Based Access Control (RBAC) system with React frontend and backend API (coming soon).
+A modern Role-Based Access Control (RBAC) system that has components inspired from ABAC, ReBAC, etc. with React frontend and backend API (coming soon).
 
 ## Project Structure
 
