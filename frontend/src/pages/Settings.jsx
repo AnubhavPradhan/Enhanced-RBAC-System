@@ -86,10 +86,10 @@ const Settings = () => {
   }
 
   const tabs = [
-    { id: 'general', name: 'General', icon: '⚙️' },
-    { id: 'security', name: 'Security', icon: '🔒' },
-    { id: 'notifications', name: 'Notifications', icon: '🔔' },
-    { id: 'backup', name: 'Backup', icon: '💾' }
+    { id: 'general', name: 'General' },
+    { id: 'security', name: 'Security' },
+    { id: 'notifications', name: 'Notifications' },
+    { id: 'backup', name: 'Backup' }
   ]
 
   return (
