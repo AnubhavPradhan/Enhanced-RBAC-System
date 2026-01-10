@@ -9,43 +9,37 @@ const Reports = () => {
       id: 1, 
       name: 'User Activity Report', 
       description: 'Detailed user login and activity logs',
-      icon: '📊',
-      color: 'bg-blue-500'
+      icon: '📊'
     },
     { 
       id: 2, 
       name: 'Permission Audit', 
       description: 'Changes to permissions and access rights',
-      icon: '🔍',
-      color: 'bg-green-500'
+      icon: '🔍'
     },
     { 
       id: 3, 
       name: 'Role Assignment Report', 
       description: 'Role changes and assignments over time',
-      icon: '👥',
-      color: 'bg-purple-500'
+      icon: '👥'
     },
     { 
       id: 4, 
       name: 'Security Summary', 
       description: 'Security events and access violations',
-      icon: '🛡️',
-      color: 'bg-red-500'
+      icon: '🛡️'
     },
     { 
       id: 5, 
       name: 'Compliance Report', 
       description: 'Regulatory compliance and access control',
-      icon: '📋',
-      color: 'bg-orange-500'
+      icon: '📋'
     },
     { 
       id: 6, 
       name: 'System Usage', 
       description: 'Overall system usage statistics',
-      icon: '📈',
-      color: 'bg-indigo-500'
+      icon: '📈'
     },
   ]
 
@@ -105,12 +99,10 @@ const Reports = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {reportTypes.map((report) => (
             <div key={report.id} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-              <div className="flex items-start justify-between mb-4">
-                <div className={`${report.color} text-white p-3 rounded-lg text-2xl`}>
-                  {report.icon}
-                </div>
+              <div className="flex items-center gap-3 mb-4">
+                <span className="text-3xl">{report.icon}</span>
+                <h3 className="text-lg font-semibold text-gray-800">{report.name}</h3>
               </div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">{report.name}</h3>
               <p className="text-gray-600 text-sm mb-4">{report.description}</p>
               <button
                 onClick={() => handleGenerateReport(report)}
