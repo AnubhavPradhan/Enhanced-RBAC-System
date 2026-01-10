@@ -5,14 +5,14 @@ const Sidebar = () => {
   const location = useLocation()
 
   const menuItems = [
-    { path: '/dashboard', name: 'Dashboard', icon: '📊' },
-    { path: '/users', name: 'Users', icon: '👥' },
-    { path: '/roles', name: 'Roles', icon: '🔐' },
-    { path: '/permissions', name: 'Permissions', icon: '🛡️' },
-    { path: '/analytics', name: 'Analytics', icon: '📈' },
-    { path: '/reports', name: 'Reports', icon: '📋' },
-    { path: '/audit-logs', name: 'Audit Logs', icon: '📝' },
-    { path: '/settings', name: 'Settings', icon: '⚙️' },
+    { path: '/dashboard', name: 'Dashboard', icon: '/icons/Dashboard.svg' },
+    { path: '/users', name: 'Users', icon: '/icons/Users.svg' },
+    { path: '/roles', name: 'Roles', icon: '/icons/Roles.png' },
+    { path: '/permissions', name: 'Permissions', icon: '/icons/Permissions.png' },
+    { path: '/analytics', name: 'Analytics', icon: '/icons/Analytics.png' },
+    { path: '/reports', name: 'Reports', icon: '/icons/Reports.png' },
+    { path: '/audit-logs', name: 'Audit Logs', icon: '/icons/AuditLogs.png' },
+    { path: '/settings', name: 'Settings', icon: '/icons/Settings.svg' },
   ]
 
   return (
@@ -31,7 +31,11 @@ const Sidebar = () => {
                       : 'text-gray-300 hover:bg-gray-700 hover:text-white'
                   }`}
                 >
-                  <span className="text-xl">{item.icon}</span>
+                  {item.icon.startsWith('/') ? (
+                    <img src={item.icon} alt={item.name} className="w-5 h-5" />
+                  ) : (
+                    <span className="text-xl">{item.icon}</span>
+                  )}
                   <span className="font-medium">{item.name}</span>
                 </Link>
               </li>
