@@ -266,10 +266,9 @@ const Permissions = () => {
         </div>
         <button
           onClick={handleAddNew}
-          className="bg-blue-600 text-white px-6 py-2.5 rounded-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg flex items-center space-x-2"
+          className="bg-blue-600 text-white px-6 py-2.5 rounded-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg"
         >
-          <span className="text-lg">➕</span>
-          <span>Add Permission</span>
+          + Add Permission
         </button>
       </div>
 
