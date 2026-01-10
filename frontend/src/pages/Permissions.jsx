@@ -302,7 +302,22 @@ const Permissions = () => {
 
       {/* Search and Filter Bar */}
       <div className="bg-white rounded-lg shadow-md p-4 mb-6">
-        <div className="flex flex-col md:flex-row md:items-center gap-4">
+        {/* Select All Checkbox */}
+        <div className="mb-4 pb-4 border-b border-gray-200">
+          <label className="flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              checked={selectedPermissions.length === filteredPermissions.length && filteredPermissions.length > 0}
+              onChange={toggleSelectAll}
+              className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+            />
+            <span className="ml-3 text-gray-700 font-medium">
+              Select all {filteredPermissions.length} permission{filteredPermissions.length > 1 ? 's' : ''}
+            </span>
+          </label>
+        </div>
+
+        <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
           <div className="flex-1">
             <div className="relative">
               <input
@@ -336,8 +351,10 @@ const Permissions = () => {
             </select>
           </div>
         </div>
+        
+        {/* Filter Results Info */}
         {(searchQuery || filterCategory !== 'All' || filterStatus !== 'All') && (
-          <div className="mt-3 flex items-center justify-between text-sm">
+          <div className="flex items-center justify-between text-sm mb-4 pb-4 border-b border-gray-200">
             <span className="text-gray-600">
               Showing {filteredPermissions.length} of {permissions.length} permissions
             </span>
@@ -353,44 +370,44 @@ const Permissions = () => {
             </button>
           </div>
         )}
-      </div>
 
-      {/* Bulk Actions Bar */}
-      {selectedPermissions.length > 0 && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <span className="text-blue-800 font-semibold">
-              {selectedPermissions.length} permission{selectedPermissions.length > 1 ? 's' : ''} selected
-            </span>
-            <button
-              onClick={() => setSelectedPermissions([])}
-              className="text-blue-600 hover:text-blue-800 text-sm underline"
-            >
-              Clear selection
-            </button>
+        {/* Bulk Actions Bar */}
+        {selectedPermissions.length > 0 && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <span className="text-blue-800 font-semibold">
+                {selectedPermissions.length} permission{selectedPermissions.length > 1 ? 's' : ''} selected
+              </span>
+              <button
+                onClick={() => setSelectedPermissions([])}
+                className="text-blue-600 hover:text-blue-800 text-sm underline"
+              >
+                Clear selection
+              </button>
+            </div>
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={handleBulkActivate}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm"
+              >
+                Activate All
+              </button>
+              <button
+                onClick={handleBulkDeactivate}
+                className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors text-sm"
+              >
+                Deactivate All
+              </button>
+              <button
+                onClick={() => setShowBulkActions(true)}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm"
+              >
+                Delete All
+              </button>
+            </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={handleBulkActivate}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm"
-            >
-              Activate All
-            </button>
-            <button
-              onClick={handleBulkDeactivate}
-              className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors text-sm"
-            >
-              Deactivate All
-            </button>
-            <button
-              onClick={() => setShowBulkActions(true)}
-              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm"
-            >
-              Delete All
-            </button>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Permissions List */}
       {filteredPermissions.length === 0 ? (
@@ -414,21 +431,6 @@ const Permissions = () => {
         </div>
       ) : (
         <>
-          {/* Select All Checkbox */}
-          <div className="bg-white rounded-lg shadow-md p-4 mb-4">
-            <label className="flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={selectedPermissions.length === filteredPermissions.length && filteredPermissions.length > 0}
-                onChange={toggleSelectAll}
-                className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
-              />
-              <span className="ml-3 text-gray-700 font-medium">
-                Select all {filteredPermissions.length} permission{filteredPermissions.length > 1 ? 's' : ''}
-              </span>
-            </label>
-          </div>
-
           {/* Permissions by Category */}
           <div className="space-y-6">{Object.entries(groupedPermissions).map(([category, perms]) => (
           <div key={category} className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -496,7 +498,7 @@ const Permissions = () => {
                         }`}
                         title={permission.status === 'Active' ? 'Click to deactivate' : 'Click to activate'}
                       >
-                        {permission.status === 'Active' ? '⏸️ Deactivate' : '▶️ Activate'}
+                        {permission.status === 'Active' ? 'Deactivate' : 'Activate'}
                       </button>
                       <button 
                         onClick={() => handleEditPermission(permission)}
