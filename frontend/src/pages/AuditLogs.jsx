@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 const AuditLogs = () => {
   const [logs, setLogs] = useState([])
   const [filteredLogs, setFilteredLogs] = useState([])
+  const [showClearConfirm, setShowClearConfirm] = useState(false)
   const [filters, setFilters] = useState({
     action: 'All',
     user: '',
@@ -47,11 +48,14 @@ const AuditLogs = () => {
   }
 
   const handleClearLogs = () => {
-    if (window.confirm('Are you sure you want to clear all audit logs? This action cannot be undone.')) {
-      setLogs([])
-      setFilteredLogs([])
-      localStorage.removeItem('rbac-audit-logs')
-    }
+    setShowClearConfirm(true)
+  }
+
+  const confirmClearLogs = () => {
+    setLogs([])
+    setFilteredLogs([])
+    localStorage.removeItem('rbac-audit-logs')
+    setShowClearConfirm(false)
   }
 
   const getSeverityColor = (severity) => {
@@ -64,10 +68,10 @@ const AuditLogs = () => {
   }
 
   const stats = [
-    { label: 'Total Events', value: logs.length, icon: '📝', color: 'bg-blue-500' },
-    { label: 'Critical Events', value: logs.filter(l => l.severity === 'Critical').length, icon: '🚨', color: 'bg-red-500' },
-    { label: 'Warnings', value: logs.filter(l => l.severity === 'Warning').length, icon: '⚠️', color: 'bg-yellow-500' },
-    { label: 'Active Users', value: new Set(logs.map(l => l.user)).size, icon: '👥', color: 'bg-green-500' },
+    { label: 'Total Events', value: logs.length, /*icon: '📝', color: 'bg-blue-500'*/ },
+    { label: 'Critical Events', value: logs.filter(l => l.severity === 'Critical').length, /*icon: '🚨', color: 'bg-red-500'*/ },
+    { label: 'Warnings', value: logs.filter(l => l.severity === 'Warning').length, /*icon: '⚠️', color: 'bg-yellow-500'*/ },
+    { label: 'Active Users', value: new Set(logs.map(l => l.user)).size, /*icon: '👥', color: 'bg-green-500'*/ },
   ]
 
   return (
@@ -91,62 +95,11 @@ const AuditLogs = () => {
         ))}
       </div>
 
-      {/* Filters */}
+      {/* Activity Log Section with Filters */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Filters</h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Action</label>
-            <select
-              value={filters.action}
-              onChange={(e) => handleFilterChange('action', e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option>All</option>
-              <option>Login</option>
-              <option>Logout</option>
-              <option>Create</option>
-              <option>Update</option>
-              <option>Delete</option>
-              <option>Failed Login</option>
-              <option>Access Denied</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">User</label>
-            <input
-              type="text"
-              value={filters.user}
-              onChange={(e) => handleFilterChange('user', e.target.value)}
-              placeholder="Search by user email..."
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">From Date</label>
-            <input
-              type="date"
-              value={filters.dateFrom}
-              onChange={(e) => handleFilterChange('dateFrom', e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">To Date</label>
-            <input
-              type="date"
-              value={filters.dateTo}
-              onChange={(e) => handleFilterChange('dateTo', e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Logs Table */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold text-gray-800">Activity Log</h2>
+        {/* Header with Title and Buttons */}
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-semibold text-gray-800">Filters</h2>
           <div className="space-x-2">
             <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">
               Export Logs
@@ -159,6 +112,59 @@ const AuditLogs = () => {
             </button>
           </div>
         </div>
+
+        {/* Filters */}
+        <div className="mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Action</label>
+              <select
+                value={filters.action}
+                onChange={(e) => handleFilterChange('action', e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option>All</option>
+                <option>Login</option>
+                <option>Logout</option>
+                <option>Create</option>
+                <option>Update</option>
+                <option>Delete</option>
+                <option>Failed Login</option>
+                <option>Access Denied</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">User</label>
+              <input
+                type="text"
+                value={filters.user}
+                onChange={(e) => handleFilterChange('user', e.target.value)}
+                placeholder="Search by user email..."
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">From Date</label>
+              <input
+                type="date"
+                value={filters.dateFrom}
+                onChange={(e) => handleFilterChange('dateFrom', e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">To Date</label>
+              <input
+                type="date"
+                value={filters.dateTo}
+                onChange={(e) => handleFilterChange('dateTo', e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Logs Table */}
         <div className="overflow-x-auto">
           <table className="min-w-full">
             <thead>
@@ -194,6 +200,32 @@ const AuditLogs = () => {
           </table>
         </div>
       </div>
+
+      {/* Clear Confirmation Modal */}
+      {showClearConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+            <h2 className="text-xl font-bold text-gray-800 mb-4">Confirmation</h2>
+            <p className="text-gray-700 mb-6">
+              Are you sure you want to clear all audit logs? This action cannot be undone.
+            </p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={confirmClearLogs}
+                className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+              >
+                OK
+              </button>
+              <button
+                onClick={() => setShowClearConfirm(false)}
+                className="px-6 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-colors font-medium"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
